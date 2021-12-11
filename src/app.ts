@@ -15,4 +15,6 @@ app.post('/questions', authenticate, questionController.createQuestion);
 
 app.get('/questions/:id', questionController.getQuestion);
 
+app.post('/questions/:id', authenticate, questionController.answerQuestion);
+
 export default app;
