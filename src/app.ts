@@ -17,4 +17,6 @@ app.get('/questions/:id', questionController.getQuestion);
 
 app.post('/questions/:id', authenticate, questionController.answerQuestion);
 
+app.get('/questions', questionController.getNotAnsweredQuestions);
+
 export default app;
