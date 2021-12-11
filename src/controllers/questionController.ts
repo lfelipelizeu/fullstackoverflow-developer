@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import * as questionRepository from '../repositories/questionRepository';
 import * as questionService from '../services/questionService';
 import NotFound from '../errors/NotFound';
+import Conflict from '../errors/Conflict';
 
 async function createQuestion(req: Request, res: Response) {
     const { question, studentId, tags } = req.body;
@@ -42,7 +43,28 @@ async function getQuestion(req: Request, res: Response) {
     }
 }
 
+async function answerQuestion(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const { answer, studentId } = req.body;
+
+    if (!answer || answer.length === 0) return res.sendStatus(400);
+    if (Number.isNaN(id) || id % 1 !== 0) return res.sendStatus(400);
+
+    try {
+        await questionService.answerQuestion(id, studentId, answer);
+
+        return res.sendStatus(201);
+    } catch (error) {
+        if (error instanceof NotFound) return res.status(404).send(error.message);
+        if (error instanceof Conflict) return res.status(409).send(error.message);
+
+        console.error(error);
+        return res.sendStatus(500);
+    }
+}
+
 export {
     createQuestion,
     getQuestion,
+    answerQuestion,
 };

@@ -24,8 +24,10 @@ interface Answer {
 
 async function createQuestion(question: Question): Promise<number> {
     const result = await connection.query(`
-        INSERT INTO questions (question, student_id, submited_at, tags) 
-        VALUES ($1, $2, $3, $4) 
+        INSERT INTO questions 
+            (question, student_id, submited_at, tags) 
+        VALUES 
+            ($1, $2, $3, $4) 
         RETURNING *;
     `, [question.question, question.studentId, new Date(), question.tags]);
     const { id } = result.rows[0];
@@ -68,8 +70,15 @@ async function getAnswer(questionId: number): Promise<Answer> {
     return answer;
 }
 
+// eslint-disable-next-line max-len
+async function answerQuestion(questionId: number, studentId: number, answer: string): Promise<void> {
+    await connection.query('UPDATE questions SET answered = true WHERE questions.id = $1;', [questionId]);
+    await connection.query('INSERT INTO answers (question_id, student_id, answered_at, answer) VALUES ($1, $2, $3, $4);', [questionId, studentId, new Date(), answer]);
+}
+
 export {
     createQuestion,
     getQuestion,
     getAnswer,
+    answerQuestion,
 };
