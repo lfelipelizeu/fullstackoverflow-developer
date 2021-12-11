@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-unresolved */
 import { Request, Response } from 'express';
 import * as questionRepository from '../repositories/questionRepository';
@@ -63,8 +64,20 @@ async function answerQuestion(req: Request, res: Response) {
     }
 }
 
+async function getNotAnsweredQuestions(req: Request, res: Response) {
+    try {
+        const notAnsweredQuestions = await questionRepository.getNotAnsweredQuestions();
+
+        return res.status(200).send(notAnsweredQuestions);
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(500);
+    }
+}
+
 export {
     createQuestion,
     getQuestion,
     answerQuestion,
+    getNotAnsweredQuestions,
 };

@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-console */
 /* eslint-disable import/no-unresolved */
 import { Request, Response } from 'express';
 import * as userService from '../services/userService';

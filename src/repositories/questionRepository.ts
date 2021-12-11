@@ -76,9 +76,30 @@ async function answerQuestion(questionId: number, studentId: number, answer: str
     await connection.query('INSERT INTO answers (question_id, student_id, answered_at, answer) VALUES ($1, $2, $3, $4);', [questionId, studentId, new Date(), answer]);
 }
 
+async function getNotAnsweredQuestions(): Promise<any[]> {
+    const result = await connection.query(`
+        SELECT 
+            questions.id, 
+            questions.question, 
+            questions.submited_at as "submitAt", 
+            students.name as student, 
+            classes.class as "classCode" 
+        FROM questions 
+            JOIN students 
+                ON students.id = questions.student_id 
+            JOIN classes 
+                ON classes.id = students.class_id 
+        WHERE questions.answered = false;
+    `);
+    const questions = result.rows;
+
+    return questions;
+}
+
 export {
     createQuestion,
     getQuestion,
     getAnswer,
     answerQuestion,
+    getNotAnsweredQuestions,
 };
