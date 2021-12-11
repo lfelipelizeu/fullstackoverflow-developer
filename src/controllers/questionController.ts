@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-unresolved */
 import { Request, Response } from 'express';
 import * as questionRepository from '../repositories/questionRepository';
