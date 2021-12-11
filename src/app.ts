@@ -13,4 +13,6 @@ app.post('/users', userController.createUser);
 
 app.post('/questions', authenticate, questionController.createQuestion);
 
+app.get('/questions/:id', questionController.getQuestion);
+
 export default app;
